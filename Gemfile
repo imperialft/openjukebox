@@ -17,6 +17,9 @@ gem 'dm-validations'
 gem 'dm-migrations'
 gem 'dm-timestamps'
 
+gem 'omniauth'
+gem 'omniauth-twitter'
+
 group :production do
   gem 'dm-mysql-adapter'
 end

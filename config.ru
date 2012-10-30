@@ -16,4 +16,4 @@ map '/assets' do
   run environment
 end
 
-run Beacon::App
+run OpenJukebox::App

@@ -27,6 +27,14 @@
                 %a{:href => '#'} Home
               %li
                 %a{:href => '#about'} About
+          .navbar-text.pull-right
+            - if signed_in?
+              %i.icon-twitter
+              == #{%w(Hello Bonjour Ola Konnichiwa Domo Ni-hao).sample}, #{user.name}!
+            - else
+              %a{:href => '/auth/twitter'}
+                %i.icon-twitter
+                Sign in via Twitter
     .container= yield
     - %w(app.js).each do |file|
       = asset_tag(file)

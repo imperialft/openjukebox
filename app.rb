@@ -8,6 +8,8 @@ module OpenJukebox
     @env
   end
 
+  require 'ripl' unless env == :production
+
   require 'pathname'
   @root = Pathname.new(File.expand_path('../', __FILE__))
   # @return [Pathname]
@@ -49,17 +51,9 @@ module OpenJukebox
         OpenJukebox.reload!
       end
     end
-    require 'omniauth'
-    use OmniAuth::Builder do
-      # Obtain this from here: https://dev.twitter.com/apps/3548274/show
-      provider :twitter, 'ofa8iNrVBp2Wkm15fEMg', 'jv4Jm1XlMJWKPz9m88lqPruAeAk8vcYAuASQTBfwu8'
-    end
+    OmniAuth.setup(self)
     get '/' do
       haml :index
-    end
-    get '/auth/:name/callback' do
-      data = request.env['omniauth.auth']
-      Ripl.start binding:binding
     end
   end
 

@@ -26,6 +26,7 @@ end
 
 group :development, :test do
   gem 'dm-sqlite-adapter'
+  gem 'ripl'
 end
 
 gem 'puma'

@@ -1,0 +1,8 @@
+.DS_Store
+**/.DS_Store
+Gemfile.lock
+tmp/*.pid
+tmp/*.sqlite3
+.sass-cache
+.idea
+config.yml

@@ -31,6 +31,8 @@
             - if signed_in?
               %i.icon-twitter
               == #{%w(Hello Bonjour Ola Konnichiwa Domo Ni-hao).sample}, #{user.name}!
+              %a{:href => '/auth/logout'}
+                (Sign out)
             - else
               %a{:href => '/auth/twitter'}
                 %i.icon-twitter

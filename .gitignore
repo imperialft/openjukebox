@@ -6,3 +6,4 @@ tmp/*.sqlite3
 .sass-cache
 .idea
 config.yml
+media/*

@@ -1,6 +1,11 @@
 OpenJukebox
 ===========
 
+Requirements
+------------
+
+* [VLC](http://www.videolan.org)
+
 Run
 ---
 

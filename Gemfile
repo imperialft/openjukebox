@@ -19,6 +19,7 @@ gem 'dm-timestamps'
 
 gem 'omniauth'
 gem 'omniauth-twitter'
+gem 'cancan'
 
 group :production do
   gem 'dm-mysql-adapter'
@@ -29,6 +30,7 @@ group :development, :test do
   gem 'ripl'
 end
 
+gem 'taglib2', :require => 'taglib'
 gem 'puma'
 
 group :test do

@@ -55,6 +55,25 @@ module OpenJukebox
     get '/' do
       haml :index
     end
+    get '/songs' do
+      @songs = Song.all
+      haml :songs
+    end
+    get '/songs/refresh' do
+      Song.refresh!
+      redirect '/songs'
+    end
+    post '/songs/:id/play' do
+      if signed_in?
+        if @song = Song.get(params[:id])
+          @song.play(user)
+        else
+          halt 404, "That doesn't exist."
+        end
+      else
+        halt 401, 'Please sign-in first.'
+      end
+    end
   end
 
 end

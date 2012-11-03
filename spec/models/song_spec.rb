@@ -8,9 +8,6 @@ describe Song do
       File.directory?(Song.root).should be_true
     end
   end
-  describe '#play' do
-    it 'should play a song'
-  end
   describe '#fullpath' do
     before { subject.path = 'test.mp3' }
     it 'should be a full path' do

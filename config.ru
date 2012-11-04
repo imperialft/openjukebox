@@ -35,9 +35,10 @@ Thread.start do
         end
       else
         if song = Song.first(:offset => rand(Song.count))
-          vlc.play(song.fullpath)
+          vlc.play(song.fullpath) # Plays some random song.
+        else
+          sleep 60 # There're no song in the library...
         end
-        sleep 60
       end
       sleep 5
     end

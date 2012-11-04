@@ -1,23 +1,38 @@
 .jumbotron
   %p.lead Now Playing
-  %h1
-    "Good Time"
-  %h3 by Carly Rae Jespen
-  %p.lead As per request from @yoidoreorg!
-  %a.btn.btn-large.btn-primary#cue{:href => '/songs'} Cue your song for &yen;10/min now!
+  - if cue = ::Cache.object_cache_get('current_cue')  
+    %h1== "#{cue.song.title}"
+    - if cue.song.artist
+      %h3== by #{cue.song.artist}
+    %p.lead== As per request from #{link_to_twitter(cue.user)}!
+  - else
+    %h1 Random Song
+    %h3 by Random Artist
+    %p.lead Because there are no queues!
+  %a.btn.btn-large.btn-primary#cue{:href => '/songs'}== Cue your song for &yen;#{object_cache('current_rate') { Cue.rate_per_minute }}/min now!
 %hr
 .row-fluid.marketing
   .span6
-    %h4 Subheading
-    %p Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.
-    %h4 Subheading
-    %p Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.
-    %h4 Subheading
-    %p Maecenas sed diam eget risus varius blandit sit amet non magna.
+    %h4 Upcoming Songs
+    - Cue.current_cues.each do |cue|
+      %p
+        %strong "#{cue.song.title}"
+        - if cue.song.artist
+          by
+          = cue.song.artist
+        from
+        = link_to_twitter(cue.user)
+    - if Cue.current_cues.count <= 0
+      %p There's nothing in the queue yet.
   .span6
-    %h4 Subheading
-    %p Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.
-    %h4 Subheading
-    %p Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.
-    %h4 Subheading
-    %p Maecenas sed diam eget risus varius blandit sit amet non magna.
+    %table.table.table-striped
+      %thead
+        %tr
+          %th Person
+          %th Usage
+      %tbody
+      - Cue.stats.each do |user, yens|
+        %tr
+          %td= link_to_twitter(user)
+          %td= number_to_yen(yens)
+    %p.muted Usage resets every first day of a month.

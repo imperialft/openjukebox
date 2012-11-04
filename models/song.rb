@@ -1,13 +1,13 @@
 class Song
   include DataMapper::Resource
+  has n, :cues
   property :id, Serial
   property :title, String, :required => true,
                            :index    => true,
                            :length   => 100
   property :artist, String, :index    => true,
                             :length   => 100
-  validates_uniqueness_of :title, :scope => :artist
-  # property :length, Integer, :required => true
+  validates_uniqueness_of :title, :scope => :artist  
   property :path, String, :required => true,
                           :length   => 2**16,
                           :unique   => true
@@ -29,15 +29,11 @@ class Song
   require 'digest/sha1'
   
   def self.refresh!
-    Dir.glob(root + "**/*.{supported_format.join(',')}").map { |s| s.sub(/^#{root}/, '')}.each do |path|
+    Dir.glob(root + "**/*.{#{supported_format.join(',')}}").map { |s| s.sub(/^#{root}/, '')}.each do |path|
       Song.create :title  => File.basename(path),
                   :path   => path,
                   :sha1   => Digest::SHA1.hexdigest(File.read(root + path))
     end
-  end
-
-  def play(user)
-    raise NotImplementedError.new('TODO')
   end
 
   def fullpath

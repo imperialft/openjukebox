@@ -22,7 +22,7 @@ module OmniAuth
         token = user.new_token!
         session[:id] = user.id
         session[:token] = token
-        redirect '/'
+        redirect session.delete(:back) || '/'
       end
       helpers do
         def user
@@ -30,6 +30,12 @@ module OmniAuth
         end
         def signed_in?
           !!user
+        end
+        def require_user!
+          unless signed_in?
+            session[:back] = request.env['REQUEST_URI']
+            redirect '/auth/twitter'
+          end
         end
       end
     end

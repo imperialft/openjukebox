@@ -63,15 +63,27 @@ module OpenJukebox
       Song.refresh!
       redirect '/songs'
     end
-    post '/songs/:id/play' do
-      if signed_in?
-        if @song = Song.get(params[:id])
-          @song.play(user)
+    get '/songs/:id/cue' do
+      require_user!
+      if @song = Song.get(params[:id])
+        Cue.create :user => user,
+                   :song => @song,
+                   :priority => :cue
+        redirect '/'
+      else
+        halt 404, "That doesn't exist."
+      end
+    end
+    delete '/cues/:id' do
+      if cue = Cue.get(params[:id])
+        if cue.user == user
+          cue.destroy
+          redirect '/cues'
         else
-          halt 404, "That doesn't exist."
+          halt 401, 'You are not authorized.'
         end
       else
-        halt 401, 'Please sign-in first.'
+        halt 404, 'cue not found.'
       end
     end
   end

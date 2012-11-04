@@ -20,11 +20,11 @@
         %td= song.title
         %td= song.artist
         %td
-          %a.btn.btn-primary{:href => "/songs/#{song.id}/queue"}
+          %a.btn.btn-primary{:href => "/songs/#{song.id}/cue"}
             %i.icon-circle-arrow-up
             Cue
-            &yen;30
-          %a.btn{:href => "/songs/#{song.id}/play"}
-            %i.icon-play
-            Cut-In
-            &yen;40
+          /
+            %a.btn{:href => "/songs/#{song.id}/cut_in"}
+              %i.icon-play
+              Cut-In
+              &yen;40

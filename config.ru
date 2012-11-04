@@ -16,4 +16,32 @@ map '/assets' do
   run environment
 end
 
+Thread.start do
+  Module.new do
+    extend Cache
+    vlc = VLC.new
+    loop do
+      if cue = Cue.current_cues.first
+        begin
+          cue.started_at = DateTime.now
+          cue.rate = object_cache('current_rate') { Cue.rate_per_minute }
+          cue.save
+          object_cache_set('current_cue', cue)
+          vlc.play(cue.song.fullpath)
+          cue.stopped_at = DateTime.now
+          cue.save
+          object_cache_delete('current_cue')
+        rescue Exception
+        end
+      else
+        if song = Song.first(:offset => rand(Song.count))
+          vlc.play(song.fullpath)
+        end
+        sleep 60
+      end
+      sleep 5
+    end
+  end # Module.new do
+end
+
 run OpenJukebox::App

@@ -1,5 +1,6 @@
 class User
   include DataMapper::Resource
+  has n, :cues
   property :id, Serial
 
   property :provider, String, :required => true,
@@ -11,7 +12,7 @@ class User
   property :info, Json, :default => '{}'
 
   def name
-    info['name']
+    info['nickname']
   end
 
   property :token, String, :index  => true,

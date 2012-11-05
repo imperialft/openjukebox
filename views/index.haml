@@ -1,11 +1,18 @@
 .jumbotron
-  %p.lead Now Playing
-  - if cue = ::Cache.object_cache_get('current_cue')  
+  - if cue = ::Cache.object_cache_get('current_cue')
+    %p.lead Now Playing
+    %h1== "#{cue.song.title}"
+    - if cue.song.artist
+      %h3== by #{cue.song.artist}
+    %p.lead== As per request from #{link_to_twitter(cue.user)}!
+  - elsif cue = Cue.current_cues.first
+    %p.lead Next Up
     %h1== "#{cue.song.title}"
     - if cue.song.artist
       %h3== by #{cue.song.artist}
     %p.lead== As per request from #{link_to_twitter(cue.user)}!
   - else
+    %p.lead Now Playing
     %h1 Random Song
     %h3 by Random Artist
     %p.lead Because there are no queues!

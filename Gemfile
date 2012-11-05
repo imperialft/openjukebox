@@ -17,6 +17,8 @@ gem 'dm-validations'
 gem 'dm-migrations'
 gem 'dm-timestamps'
 
+gem 'redis', '~> 2.2.2'
+
 gem 'omniauth'
 gem 'omniauth-twitter'
 gem 'cancan'

@@ -69,7 +69,7 @@ module OpenJukebox
         Cue.create :user => user,
                    :song => @song,
                    :priority => :cue
-        redirect '/'
+        redirect '/songs'
       else
         halt 404, "That doesn't exist."
       end

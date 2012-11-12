@@ -5,6 +5,7 @@ Requirements
 ------------
 
 * [VLC](http://www.videolan.org)
+* [ffmpeg](http://ffmpeg.org)
 
 Run
 ---

@@ -30,14 +30,25 @@ class Song
   
   def self.refresh!
     Dir.glob(root + "**/*.{#{supported_format.join(',')}}").map { |s| s.sub(/^#{root}/, '')}.each do |path|
-      Song.create :title  => File.basename(path),
-                  :path   => path,
-                  :sha1   => Digest::SHA1.hexdigest(File.read(root + path))
+      song = Song.new(:path => path)
+      song.sha1 = Digest::SHA1.hexdigest(File.read(song.fullpath))
+      info = get_info(song.fullpath)
+      song.title = info[:title] || File.basename(path)
+      song.artist = info[:artist]
+      song.save
     end
   end
 
   def fullpath
     (self.class.root + path).to_s
+  end
+
+  def self.get_info(path)
+    info = `ffprobe "#{path.gsub('"', '\"')}" 2>&1`.strip.split(/\n/)
+    {
+      :artist => info.find { |s| s =~ /artist/ }.split(':', 2).last.strip,
+      :title  => info.find { |s| s =~ /title/  }.split(':', 2).last.strip
+    }
   end
 
 end

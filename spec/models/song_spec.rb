@@ -14,4 +14,7 @@ describe Song do
       subject.fullpath.should == File.expand_path('media/test.mp3')
     end
   end
+  describe '.get_info' do
+    it 'should be a get info'
+  end
 end

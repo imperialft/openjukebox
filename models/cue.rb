@@ -26,11 +26,6 @@ class Cue
     all(:started_at => nil, :order => :created_at.asc)
   end
 
-  after :create do
-    cues = self.class.current_cues
-    VLC.killall! if cues.size == 1 && cues.first == self
-  end
-
   def self.stats
     t = Date.today
     all(:started_at.gte => Time.new(t.year, t.month), :stopped_at.not => nil).inject Hash.new(0) do |hash, cue|

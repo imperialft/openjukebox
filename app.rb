@@ -56,7 +56,7 @@ module OpenJukebox
       haml :index
     end
     get '/songs' do
-      @songs = Song.all
+      @songs = Song.all(:order => :path.asc)
       haml :songs
     end
     get '/songs/refresh' do

@@ -1,5 +1,6 @@
 .jumbotron
-  - if cue = ::Cache.object_cache_get('current_cue')
+  - if cue_id = ::Cache.object_cache_get('current_cue_id')
+    - cue = Cue.get(cue_id)
     %p.lead Now Playing
     %h1== "#{cue.song.title}"
     - if cue.song.artist

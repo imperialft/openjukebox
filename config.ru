@@ -22,7 +22,7 @@ Thread.start do
     vlc = VLC.new
     loop do
       if cue = Cue.current_cues.first
-        object_cache_set('current_cue', cue)
+        object_cache_set('current_cue_id', cue.id)
         begin
           cue.started_at = DateTime.now
           cue.rate = object_cache('current_rate') { Cue.rate_per_minute }
@@ -32,7 +32,7 @@ Thread.start do
           cue.save
         rescue Exception
         end
-        object_cache_delete('current_cue')
+        object_cache_delete('current_cue_id')
       else
         if song = Song.first(:offset => rand(Song.count))
           vlc.play(song.fullpath) # Plays some random song.

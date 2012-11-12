@@ -7,7 +7,6 @@ module Cache
     Cache.store[name] ||= yield
   end
   def object_cache_set(name, object = nil)
-    puts "Setting #{name} = #{object.inspect}"
     Cache.store[name] = object || yield
   end
   def object_cache_get(name)

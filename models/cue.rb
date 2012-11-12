@@ -14,7 +14,7 @@ class Cue
 
   # @return [Numeric] per minute price of a song.
   def self.rate_per_minute
-    10
+    3
   end
   
   # @return [Numeric] per minute price multiplier when cut into a song that hasn't finished.
@@ -24,6 +24,11 @@ class Cue
 
   def self.current_cues
     all(:started_at => nil, :order => :created_at.asc)
+  end
+
+  after :create do
+    cues = self.class.current_cues
+    VLC.killall! if cues.size == 1 && cues.first == self
   end
 
   def self.stats

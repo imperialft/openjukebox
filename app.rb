@@ -60,8 +60,12 @@ module OpenJukebox
       haml :songs
     end
     get '/songs/refresh' do
-      Song.refresh!
-      redirect '/songs'
+      Thread.start { Song.refresh! }
+      if params[:ajax]
+        halt 200, 'Started refreshing songs.'
+      else
+        redirect '/'
+      end
     end
     get '/songs/:id/cue' do
       require_user!
@@ -69,7 +73,11 @@ module OpenJukebox
         Cue.create :user => user,
                    :song => @song,
                    :priority => :cue
-        redirect '/songs'
+        if params[:ajax]
+          halt 200, 'The cue has been added.'
+        else
+          redirect '/songs'
+        end
       else
         halt 404, "That doesn't exist."
       end
@@ -78,12 +86,16 @@ module OpenJukebox
       if cue = Cue.get(params[:id])
         if cue.user == user
           cue.destroy
-          redirect '/cues'
+          if params[:ajax]
+            halt 200, 'The cue has been deleted.'
+          else
+            redirect '/cues'
+          end
         else
           halt 401, 'You are not authorized.'
         end
       else
-        halt 404, 'cue not found.'
+        halt 404, 'Cue could not been found.'
       end
     end
   end

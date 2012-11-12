@@ -20,6 +20,10 @@ class VLC
     @binary ||= Dir.glob('{/usr/bin/vlc,/usr/local/bin/vlc,/Applications/VLC.app/Contents/MacOS/VLC}').first
   end
 
+  def self.killall!
+    system "killall VLC 2> /dev/null > /dev/null"
+  end
+
   private
 
   def playback_options

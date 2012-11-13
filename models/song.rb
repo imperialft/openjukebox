@@ -45,7 +45,7 @@ class Song
 
   def self.get_info(path)
     info = `ffprobe "#{path.gsub('"', '\"')}" 2>&1`.strip.split(/\n/)
-    {
+    { # return
       :artist => info.find { |s| s =~ /artist/ }.split(':', 2).last.strip,
       :title  => info.find { |s| s =~ /title/  }.split(':', 2).last.strip
     }

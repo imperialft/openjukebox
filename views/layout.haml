@@ -54,7 +54,9 @@
           %li
             %a{:href => "/"} Home
           %li
-            %a{:href => "/songs"} Songs
+            %a{:href => "/songs"}
+              = ::Cache.object_cache(:songs_count) { Song.count }
+              Songs
         %h3.muted#logo
           %i.icon-circle-arrow-up.icon-large
           OpenJukebox

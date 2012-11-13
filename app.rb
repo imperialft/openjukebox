@@ -64,7 +64,7 @@ module OpenJukebox
       if params[:ajax]
         halt 200, 'Started refreshing songs.'
       else
-        redirect '/'
+        redirect '/songs'
       end
     end
     get '/songs/:id/cue' do

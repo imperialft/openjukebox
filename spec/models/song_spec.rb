@@ -15,6 +15,9 @@ describe Song do
     end
   end
   describe '.get_info' do
-    it 'should be a get info'
+    before { subject.path = 'gentle_marimba.mp3' }
+    it 'should be a get info' do
+      subject.class.get_info(subject.fullpath).should == { :artist => 'Alastair Cameron', :title => 'gentle marimba' }
+    end
   end
 end

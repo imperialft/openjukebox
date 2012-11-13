@@ -1,6 +1,5 @@
 class User
   include DataMapper::Resource
-  has n, :cues
   property :id, Serial
 
   property :provider, String, :required => true,
@@ -31,6 +30,11 @@ class User
     t = self.class.generate_token
     update :token => t
     t # return
+  end
+
+  def delete_token!
+    update :token => nil
+    true # return
   end
 
 end

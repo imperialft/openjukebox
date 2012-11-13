@@ -1,12 +1,14 @@
 module OpenJukebox
   module AppHelper
-    require_relative './cache'
-    include Cache
 
+    # @param [Fixnum]
+    # @return [String]
     def number_to_yen(n)
       '&yen;' + n.to_i.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\1,').reverse
     end
 
+    # @param [User]
+    # @return [String]
     def link_to_twitter(user)
       '<a href="http://twitter.com/' + user.info['nickname'] + '">@' + user.info['nickname'] + '</a>'
     end

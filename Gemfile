@@ -24,7 +24,7 @@ gem 'omniauth-twitter'
 gem 'cancan'
 
 group :production do
-  # gem 'dm-mysql-adapter'
+  gem 'dm-mysql-adapter'
 end
 
 group :development, :test do
@@ -32,7 +32,6 @@ group :development, :test do
   gem 'ripl'
 end
 
-# gem 'taglib2', :require => 'taglib'
 gem 'puma'
 
 group :test do

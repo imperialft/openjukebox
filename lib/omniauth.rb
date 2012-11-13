@@ -10,6 +10,7 @@ module OmniAuth
         provider :twitter, 'ofa8iNrVBp2Wkm15fEMg', 'jv4Jm1XlMJWKPz9m88lqPruAeAk8vcYAuASQTBfwu8'
       end
       get '/auth/logout' do
+        user.delete_token!
         session[:id] = nil
         session[:token] = nil
         redirect '/'

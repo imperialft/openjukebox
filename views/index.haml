@@ -1,37 +1,36 @@
 .jumbotron
-  - if cue_id = ::Cache.object_cache_get('current_cue_id')
-    - cue = Cue.get(cue_id)
+  - if song = Song.current_queue
     %p.lead Now Playing
-    %h1== "#{cue.song.title}"
-    - if cue.song.artist
-      %h3== by #{cue.song.artist}
-    %p.lead== As per request from #{link_to_twitter(cue.user)}!
-  - elsif cue = Cue.current_cues.first
-    %p.lead Next Up
-    %h1== "#{cue.song.title}"
-    - if cue.song.artist
-      %h3== by #{cue.song.artist}
-    %p.lead== As per request from #{link_to_twitter(cue.user)}!
-  - else
+    %h1= song.title
+    %h3== by #{song.artist}
+    / %p.lead== As per request from #{link_to_twitter(User.first)}!
+  - elsif Song.queues(:size) <= 0
     %p.lead Now Playing
     %h1 Random Song
     %h3 by Random Artist
     %p.lead Because there are no queues!
-  %a.btn.btn-large.btn-primary#cue{:href => '/songs'}== Cue your song for &yen;#{object_cache('current_rate') { Cue.rate_per_minute }}/min now!
+  - elsif song = Song.queues(:first)
+    %p.lead Next Up
+    %h1= song.title
+    %h3== by #{song.artist}
+    / %p.lead== As per request from #{link_to_twitter(User.first)}!
+  - else
+    %p.lead Wait for it...
+  %a.btn.btn-large.btn-primary#cue{:href => '/songs'}== Cue your song for &yen;#{Song.per_minute_price.round}/min!
 %hr
 .row-fluid.marketing
   .span6
-    %h4 Upcoming Songs
-    - Cue.current_cues.each do |cue|
+    %h4 Coming Up:
+    - Song.queues(:to_a).each do |song|
       %p
-        %strong "#{cue.song.title}"
-        - if cue.song.artist
-          by
-          = cue.song.artist
-        from
-        = link_to_twitter(cue.user)
-    - if Cue.current_cues.count <= 0
-      %p There's nothing in the queue yet.
+        %strong= song.title
+        by
+        = song.artist
+        /
+          from
+          = link_to_twitter(User.first)
+    - if Song.queues(:size) <= 1
+      %p There's nothing in the queue.
   .span6
     %table.table.table-striped
       %thead
@@ -39,8 +38,4 @@
           %th Person
           %th Usage
       %tbody
-      - Cue.stats.each do |user, yens|
-        %tr
-          %td= link_to_twitter(user)
-          %td= number_to_yen(yens)
     %p.muted Usage resets every first day of a month.

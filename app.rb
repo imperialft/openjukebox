@@ -48,6 +48,29 @@ module OpenJukebox
     set :environment, OpenJukebox.env
     before { OpenJukebox.reload! } if environment == :development
     OmniAuth.setup(self)
+
+    get '/' do
+      haml :index
+    end
+
+    get '/songs' do
+      require_user!
+      @songs = Song.all
+      haml :songs
+    end
+
+    post '/songs/:id/cue' do
+      require_user!
+      if song = Song.get(params[:id])
+        # user.add_usage!(song)
+        song.user = user
+        queues_count = Song.queues(:push, song).size
+        halt 200, queues_count.to_s # return
+      else
+        halt 404 # return
+      end
+    end
+
   end
 
 end

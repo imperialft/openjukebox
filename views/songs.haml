@@ -1,32 +1,34 @@
-%h1
-  = ::Cache.object_cache(:songs_count) { Song.count }
-  Songs
+%h1 Songs
 %p
   Want your favorite songs here? Just drop your file in
   %i= Song.root
-  and click the button below!
-  == Supported formats are: #{Song.supported_format.join(', ')}.
-%p
-  %a.btn{:href => "/songs/refresh"}
-    %i.icon-refresh
-    Refresh Songs
-%table.table.table-striped.table-bordered
-  %thead
-    %tr
-      %th Title
-      %th Artist
-      %th Actions
-  %tbody
-    - @songs.each do |song|
-      %tr
-        %td= song.title
-        %td= song.artist
-        %td
-          %a.btn.btn-primary{:href => "/songs/#{song.id}/cue"}
-            %i.icon-circle-arrow-up
-            Cue
-          /
-            %a.btn{:href => "/songs/#{song.id}/cut_in"}
-              %i.icon-play
-              Cut-In
-              &yen;40
+  and just refresh this page!
+  == Supported formats are: #{Song.formats.join(', ')}.
+
+:coffeescript
+  $(document).ready ->
+    $('a.cue').click ->
+      a = $(@)
+      $.post a.attr('href'), {}, (data, stat, xhr) =>
+        $.notification
+          title: 'Added! There is ' + data + ' songs in the queue.'
+          timeout: 5000
+          showTime: false
+          icon: 'N'
+
+      false # return
+
+- @songs.inject({}){|p,i|a = i.artist.split(',').first.strip; p.has_key?(a) ? p[a].push(i) : p[a] = [i]; p}.sort{|(a,_),(b,_)| a <=> b }.each do |artist, songs|
+  %p
+    %table.table.table-striped.table-bordered
+      %thead
+        %tr
+          %th{:colspan => 2}= artist
+      %tbody
+        %tr
+          %td
+            - songs.each do |song|
+              %a.btn.btn-default.cue{:href => "/songs/#{song.id}/cue"}
+                %i.icon-circle-arrow-up
+                = song.title
+                == @ #{number_to_yen(song.price)}

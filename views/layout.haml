@@ -45,7 +45,7 @@
       }
     / [if lte ie 7]
       = asset_tag 'font-awesome-2.0/font-awesome-ie7.css'
-    - %w(app.css).each do |file|
+    - %w(app.js app.css).each do |file|
       = asset_tag(file)
   %body
     .container-narrow
@@ -54,9 +54,7 @@
           %li
             %a{:href => "/"} Home
           %li
-            %a{:href => "/songs"}
-              = ::Cache.object_cache(:songs_count) { Song.count }
-              Songs
+            %a{:href => "/songs"} Songs
         %h3.muted#logo
           %i.icon-circle-arrow-up.icon-large
           OpenJukebox

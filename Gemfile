@@ -17,18 +17,20 @@ gem 'dm-validations'
 gem 'dm-migrations'
 gem 'dm-timestamps'
 
-gem 'redis', '~> 2.2.2'
+# gem 'redis', '~> 2.2.2'
 
 gem 'omniauth'
 gem 'omniauth-twitter'
 gem 'cancan'
+
+gem 'activesupport', :require => 'active_support'
+gem 'dm-sqlite-adapter'
 
 group :production do
   gem 'dm-mysql-adapter'
 end
 
 group :development, :test do
-  gem 'dm-sqlite-adapter'
   gem 'ripl'
 end
 

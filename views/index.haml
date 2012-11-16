@@ -40,4 +40,21 @@
           %tr
             %td= link_to_twitter(user)
             %td== &yen;#{yens}
-    %p.muted Usage resets every first day of a month.
+    %table.table.table-striped
+      %thead
+        %tr
+          %th Song
+          %th Reqs
+      %tbody
+        - i = 0
+        - last_count = nil
+        - PlayLog.play_stats.each do |song, plays|
+          - i += 1 if last_count != plays            
+          - last_count = plays
+          - break if i > 5
+          %tr
+            %td
+              %strong= song.title
+              / == by #{song.artist}
+            %td= plays
+    %p.muted Usage and play stats reset every first day of a month.

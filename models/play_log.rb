@@ -14,7 +14,18 @@ class PlayLog
         pass[it.user]  = it.song.price
       end
       pass # return
-    }.sort { |(_,a),(_,b)| a <=> b }
+    }.sort { |(_,a),(_,b)| b <=> a }
+  end
+
+  def self.play_stats
+    all(:created_at.gte => Date.today.beginning_of_month).inject({}) { |pass, it|
+      if pass.has_key?(it.song)
+        pass[it.song] += 1
+      else
+        pass[it.song]  = 1
+      end
+      pass # return
+    }.sort { |(_,a),(_,b)| b <=> a }
   end
 
 end

@@ -41,3 +41,5 @@ group :test do
   gem 'rspec-expectations'
   gem 'rspec-mocks'
 end
+
+gem 'escape'

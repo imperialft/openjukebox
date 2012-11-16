@@ -1,5 +1,6 @@
 class Song
   include DataMapper::Resource
+  has n, :play_logs
 
   property :id, Serial
   property :path, String, :required => true,
@@ -29,7 +30,7 @@ class Song
   end
 
   def self.per_minute_price
-    (1 + Math.sqrt(5))/2
+    (1 + Math.sqrt(5)) / 2
   end
 
   def price
@@ -70,7 +71,7 @@ class Song
     Thread.start do
       begin
         vlc = VLC.new
-        at_exit { vlc.killall! }
+        at_exit { VLC.killall! }
         loop do
           if queue = queues(:shift) # See if there is a queue.
             fullpath = queue.fullpath.to_s
@@ -99,7 +100,9 @@ class Song
   @mutex = Mutex.new unless @mutex
   @queues = [] unless @queues
   def self.queues(op = nil, *args)
-    @mutex.synchronize { op ? @queues.send(op, *args) : $queues }
+    @mutex.synchronize do
+      op ? @queues.send(op, *args) : @queues
+    end
   end
 
 end

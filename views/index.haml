@@ -3,7 +3,7 @@
     %p.lead Now Playing
     %h1= song.title
     %h3== by #{song.artist}
-    / %p.lead== As per request from #{link_to_twitter(User.first)}!
+    %p.lead== As per request from #{link_to_twitter(song.user)}!
   - elsif Song.queues(:size) <= 0
     %p.lead Now Playing
     %h1 Random Song
@@ -13,7 +13,7 @@
     %p.lead Next Up
     %h1= song.title
     %h3== by #{song.artist}
-    / %p.lead== As per request from #{link_to_twitter(User.first)}!
+    %p.lead== As per request from #{link_to_twitter(song.user)}!
   - else
     %p.lead Wait for it...
   %a.btn.btn-large.btn-primary#cue{:href => '/songs'}== Cue your song for &yen;#{Song.per_minute_price.round}/min!
@@ -23,13 +23,11 @@
     %h4 Coming Up:
     - Song.queues(:to_a).each do |song|
       %p
+        = link_to_twitter(song.user)
+        requested
         %strong= song.title
-        by
-        = song.artist
-        /
-          from
-          = link_to_twitter(User.first)
-    - if Song.queues(:size) <= 1
+        == by #{song.artist}.
+    - if Song.queues(:size) <= 0
       %p There's nothing in the queue.
   .span6
     %table.table.table-striped
@@ -38,4 +36,8 @@
           %th Person
           %th Usage
       %tbody
+        - PlayLog.usage.each do |user, yens|
+          %tr
+            %td= link_to_twitter(user)
+            %td== &yen;#{yens}
     %p.muted Usage resets every first day of a month.

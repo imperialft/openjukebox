@@ -11,6 +11,8 @@ module OpenJukebox
     # @return [String]
     def link_to_twitter(user)
       '<a href="http://twitter.com/' + user.info['nickname'] + '">@' + user.info['nickname'] + '</a>'
+    rescue NoMethodError # Hmm, seriously?
+      'Someone'
     end
 
     # @param [String] file

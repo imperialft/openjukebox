@@ -1,5 +1,7 @@
 class User
   include DataMapper::Resource
+  has n, :play_logs
+  
   property :id, Serial
 
   property :provider, String, :required => true,

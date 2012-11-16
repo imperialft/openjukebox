@@ -62,9 +62,10 @@ module OpenJukebox
     post '/songs/:id/cue' do
       require_user!
       if song = Song.get(params[:id])
-        # user.add_usage!(song)
+        PlayLog.create(:user => user, :song => song)
         song.user = user
         queues_count = Song.queues(:push, song).size
+        VLC.killall! if queues_count <= 1 && !Song.current_queue
         halt 200, queues_count.to_s # return
       else
         halt 404 # return

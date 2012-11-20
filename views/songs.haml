@@ -2,7 +2,8 @@
 %p
   Want your favorite songs here? Just drop your file in
   %i= Song.root
-  and just refresh this page!
+  and just
+  %a{:href => '/songs/refresh'} click here!
   == Supported formats are: #{Song.formats.join(', ')}.
 
 :coffeescript

@@ -62,6 +62,11 @@ class Song
     @current_queue
   end
 
+  @current_random_song = nil unless @current_random_song
+  def self.current_random_song
+    @current_random_song
+  end
+
   def self.autoplay!
     Thread.start do
       loop do
@@ -87,8 +92,13 @@ class Song
             @mutex.synchronize { @current_queue = nil }
             puts "Playback ended."
           else
-            vlc.play(glob.shuffle.first)
-            puts "Queue empty."
+            puts "Randomize!"
+            @mutex.synchronize {
+              @current_random_song = Song.first(:offset => rand(repository.adapter.select('SELECT COUNT(id) FROM songs').first))
+            }
+            vlc.play(@current_random_song.fullpath.to_s)
+            @mutex.synchronize { @current_random_song = nil }
+            puts "Random ended."
           end
           sleep 3
         end

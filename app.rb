@@ -59,6 +59,12 @@ module OpenJukebox
       haml :songs
     end
 
+    get '/songs/refresh' do
+      require_user!
+      Thread.start { Song.refresh! }
+      redirect '/songs'
+    end
+
     post '/songs/:id/cue' do
       require_user!
       if song = Song.get(params[:id])

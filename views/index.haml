@@ -1,17 +1,23 @@
+%meta{'http-equiv' => 'refresh', :content => '60; URL=/'}
 .jumbotron
   - if song = Song.current_queue
     %p.lead Now Playing
-    %h1= song.title
+    %h1== "#{song.title}"
     %h3== by #{song.artist}
     %p.lead== As per request from #{link_to_twitter(song.user)}!
   - elsif Song.queues(:size) <= 0
-    %p.lead Now Playing
-    %h1 Random Song
-    %h3 by Random Artist
-    %p.lead Because there are no queues!
+    - if song = Song.current_random_song
+      %p.lead Now Playing
+      %h2== "#{song.title}"
+      %h3== by #{song.artist}
+      %p.lead
+        Because there're no queues!
+        Cue now and cut in!
+    - else
+      %p.lead Wait for it...
   - elsif song = Song.queues(:first)
     %p.lead Next Up
-    %h1= song.title
+    %h1== "#{song.title}"
     %h3== by #{song.artist}
     %p.lead== As per request from #{link_to_twitter(song.user)}!
   - else

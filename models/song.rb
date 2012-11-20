@@ -52,6 +52,7 @@ class Song
       puts "Discovered: #{s}"
       song = new(ffmpeg.metainfo(s))
       song.path = s.sub(/^#{root}\/?/, '')
+      song.title = File.basename(song.path) if !song.title || song.title == ''
       song.save || puts("Failed to save: #{song.inspect} (#{song.errors.inspect})")
     end
   end

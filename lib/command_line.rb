@@ -29,7 +29,7 @@ end
 class VLC < OpenJukebox::CommandLine
   def play(uri)
     measure do
-      exec uri, "vlc://quit", "-I", "dummy", "--no-video", "--audio-filter=normalizer"
+      exec uri, "vlc://quit", "-I", "dummy", "--no-video", "--audio-filter=normalizer", "--volume=384"
     end
   end
   def version

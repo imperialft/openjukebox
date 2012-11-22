@@ -19,6 +19,11 @@
 
       false # return
 
+:coffeescript
+  $(document).ready ->
+    $('.cue').tooltip
+      animation: false
+      placement: 'bottom'
 - @songs.inject({}){|p,i|a = i.artist.split(',').first.strip; p.has_key?(a) ? p[a].push(i) : p[a] = [i]; p}.sort{|(a,_),(b,_)| a <=> b }.each do |artist, songs|
   %p
     %table.table.table-striped.table-bordered
@@ -29,7 +34,7 @@
         %tr
           %td
             - songs.each do |song|
-              %a.btn.btn-default.cue{:href => "/songs/#{song.id}/cue"}
+              %a.btn.btn-default.cue{:href => "/songs/#{song.id}/cue", :title => song.path}
                 %i.icon-circle-arrow-up
                 = song.title
                 == @ #{number_to_yen(song.price)}

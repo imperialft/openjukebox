@@ -5,36 +5,57 @@
   and just
   %a{:href => '/songs/refresh'} click here!
   == Supported formats are: #{Song.formats.join(', ')}.
+%p
+  .input-append
+    %input#search.span6{:type => 'text', :placeholder => 'Type search keyword and press [ENTER] ...'}
+    %button.btn#clear{:type => 'button'} Clear
+    :coffeescript
+      reset = () ->
+        $('.artist').show()
+        $('.cue').show()
+      $('#clear').click =>
+        $('#search').val('')
+        reset()
+      $(document).keypress (e) =>
+        elem = $('#search')
+        if e.which == 13 && elem.is(':focus')          
+          if elem.val() != ''
+            reset()
+            keyword = new RegExp(elem.val(), "i")
+            for song in $('.cue')
+              a = $(song)
+              a.hide() unless a.data('artist').match(keyword) || a.data('title').match(keyword)
+            for artist in $('.artist')
+              p = $(artist)
+              p.hide() if p.find('.cue :visible').length <= 0
+          else
+            reset()
 
 :coffeescript
-  $(document).ready ->
-    $('a.cue').click ->
-      a = $(@)
-      $.post a.attr('href'), {}, (data, stat, xhr) =>
-        $.notification
-          title: 'Added! There is ' + data + ' songs in the queue.'
-          timeout: 5000
-          showTime: false
-          icon: 'N'
-
-      false # return
+  $('a.cue').click ->
+    a = $(@)
+    $.post a.attr('href'), {}, (data, stat, xhr) =>
+      $.notification
+        title: 'Added! There is ' + data + ' songs in the queue.'
+        timeout: 5000
+        showTime: false
+        icon: 'N'
+    false # return
 
 :coffeescript
-  $(document).ready ->
-    $('.cue').tooltip
-      animation: false
-      placement: 'bottom'
+  $('.cue').tooltip
+    animation: false
+    placement: 'bottom'
 - @songs.inject({}){|p,i|a = i.artist.split(',').first.strip; p.has_key?(a) ? p[a].push(i) : p[a] = [i]; p}.sort{|(a,_),(b,_)| a <=> b }.each do |artist, songs|
-  %p
-    %table.table.table-striped.table-bordered
-      %thead
-        %tr
-          %th{:colspan => 2}= artist
-      %tbody
-        %tr
-          %td
-            - songs.each do |song|
-              %a.btn.btn-default.cue{:href => "/songs/#{song.id}/cue", :title => song.path}
-                %i.icon-circle-arrow-up
-                = song.title
-                == @ #{number_to_yen(song.price)}
+  %table.table.table-striped.table-bordered.artist
+    %thead
+      %tr
+        %th{:colspan => 2}= artist
+    %tbody
+      %tr
+        %td
+          - songs.each do |song|
+            %a.btn.btn-default.cue{:href => "/songs/#{song.id}/cue", :title => song.path, 'data-title' => song.title, 'data-artist' => song.artist, 'data-album' => song.album}
+              %i.icon-circle-arrow-up
+              = song.title
+              == @ #{number_to_yen(song.price)}

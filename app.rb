@@ -55,7 +55,11 @@ module OpenJukebox
 
     get '/songs' do
       require_user!
-      @songs = Song.all
+      @songs = if params[:s] && params[:s] != ''
+                 Song.all(:artist.like => '%' + params[:s] + '%') | Song.all(:title.like => '%' + params[:s] + '%')
+               else
+                 Song.all
+               end
       haml :songs
     end
 

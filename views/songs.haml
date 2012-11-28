@@ -6,46 +6,26 @@
   %a{:href => '/songs/refresh'} click here!
   == Supported formats are: #{Song.formats.join(', ')}.
 %p
-  .input-append
-    %input#search.span6{:type => 'text', :placeholder => 'Type search keyword and press [ENTER] ...'}
-    %button.btn#clear{:type => 'button'} Clear
-    :coffeescript
-      reset = () ->
-        $('.artist').show()
-        $('.cue').show()
-      $('#clear').click =>
-        $('#search').val('')
-        reset()
-      $(document).keypress (e) =>
-        elem = $('#search')
-        if e.which == 13 && elem.is(':focus')          
-          if elem.val() != ''
-            reset()
-            keyword = new RegExp(elem.val(), "i")
-            for song in $('.cue')
-              a = $(song)
-              a.hide() unless a.data('artist').match(keyword) || a.data('title').match(keyword)
-            for artist in $('.artist')
-              p = $(artist)
-              p.hide() if p.find('.cue :visible').length <= 0
-          else
-            reset()
+  %form{:method => 'get', :action => '/songs'}
+    .input-append
+      %input#search.span6{:name => 's', :type => 'text', :placeholder => 'Type search keyword and press [ENTER] ...', :value => params[:s]}
+      %input.btn#clear{:type => 'submit'}
 
 :coffeescript
-  $('a.cue').click ->
-    a = $(@)
-    $.post a.attr('href'), {}, (data, stat, xhr) =>
-      $.notification
-        title: 'Added! There is ' + data + ' songs in the queue.'
-        timeout: 5000
-        showTime: false
-        icon: 'N'
-    false # return
+  $(document).ready ->
+    $('a.cue').click ->
+      a = $(@)
+      $.post a.attr('href'), {}, (data, stat, xhr) =>
+        $.notification
+          title: 'Added! There is ' + data + ' songs in the queue.'
+          timeout: 5000
+          showTime: false
+          icon: 'N'
+      false # return
+    $('.cue').tooltip
+      animation: false
+      placement: 'bottom'
 
-:coffeescript
-  $('.cue').tooltip
-    animation: false
-    placement: 'bottom'
 - @songs.inject({}){|p,i|a = i.artist.split(',').first.strip; p.has_key?(a) ? p[a].push(i) : p[a] = [i]; p}.sort{|(a,_),(b,_)| a <=> b }.each do |artist, songs|
   %table.table.table-striped.table-bordered.artist
     %thead

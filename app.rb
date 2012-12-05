@@ -71,7 +71,7 @@ module OpenJukebox
 
     post '/songs/:id/cue' do
       require_user!
-      if song = Song.get(params[:id])
+      if song = Song.get(params[:id].to_i)
         PlayLog.create(:user => user, :song => song)
         song.user = user
         queues_count = Song.queues(:push, song).size
